@@ -318,6 +318,8 @@ public class RedBlackTreeTest
     rbt.insert(11);
     rbt.insert(22);
     rbt.insert(26);
+
+    
     rbt.addPostOrderToTheTree();
     System.out.print("\nPost order : ");
     rbt.postorder();
