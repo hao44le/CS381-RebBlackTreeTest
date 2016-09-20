@@ -35,8 +35,8 @@ class RBTree
    private RedBlackNode parent;
    private RedBlackNode grand;
    private RedBlackNode great;
-   private RedBlackNode header;    
-   private static RedBlackNode nullNode;
+   public RedBlackNode header;    
+   public static RedBlackNode nullNode;
    /* static initializer for nullNode */
    static 
    {
@@ -228,7 +228,7 @@ class RBTree
 
    /*Add total to the tree*/
    public void addPostOrderToTheTree(){
-   		addPostOrderToTheTree(header);
+   		addPostOrderToTheTree(header.right);
    } 
    private void addPostOrderToTheTree(RedBlackNode r){
    		if (r != nullNode)
@@ -243,6 +243,34 @@ class RBTree
            }
            
        }
+   }
+
+   
+   RedBlackNode midNode = nullNode;
+   int sum = 0;
+   int count = 0;
+   public void findSumInRange(int low,int high,RedBlackNode currNode){
+      count ++;
+   		if(currNode != nullNode){
+   			if(currNode.element >= low && currNode.element <= high){
+   				if(midNode == nullNode){
+   					midNode = currNode;
+   					sum = currNode.total + currNode.element;
+   				}
+          //System.out.println("\n"+currNode.element);
+          
+   				findSumInRange(low,high,currNode.left);
+   				findSumInRange(low,high,currNode.right);
+   			}else if(currNode.element < low){
+   				if(midNode != nullNode){
+   					sum -= (currNode.total + currNode.element);
+   				}
+   			}else if(currNode.element > high){
+   				if(midNode != nullNode){
+   					sum -= (currNode.total + currNode.element);
+   				}
+   			}
+   		}
    }      
 }
 
@@ -318,9 +346,52 @@ public class RedBlackTreeTest
     rbt.insert(11);
     rbt.insert(22);
     rbt.insert(26);
-
+    // for(int i = 30 ; i < 50 ; i++){
+    //   rbt.insert(i);
+    // }
     
     rbt.addPostOrderToTheTree();
+    int low = 1;
+    int high = 10;
+    rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
+    rbt.midNode = rbt.nullNode;
+    rbt.sum = 0;
+    rbt.count = 0;
+
+    low = 7;
+    high = 20;
+    rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
+    rbt.midNode = rbt.nullNode;
+    rbt.sum = 0;
+    rbt.count = 0;
+
+    low = 5;
+    high = 22;
+    rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
+    rbt.midNode = rbt.nullNode;
+    rbt.sum = 0;
+    rbt.count = 0;
+
+    low = 1;
+    high = 25;
+    rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
+    rbt.midNode = rbt.nullNode;
+    rbt.sum = 0;
+    rbt.count = 0;
+
+    low = 1;
+    high = 100;
+    rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
+    rbt.midNode = rbt.nullNode;
+    rbt.sum = 0;
+    rbt.count = 0;
+
+
     System.out.print("\nPost order : ");
     rbt.postorder();
     System.out.print("\nPre order : ");
