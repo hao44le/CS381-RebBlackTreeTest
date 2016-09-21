@@ -247,73 +247,137 @@ class RBTree
    }
 
    
-   int greaterThanHigh = 0;
-   int lowerThanLow = 0;
-   int count = 0;
-   public int findSumInRange(int low,int high,RedBlackNode currNode){
-      int sum = currNode.total;
-      greaterThanHigh = 0;
-      lowerThanLow = 0;
-      count = 0;
-      if(currNode.key >= high){
-         greaterThanHigh = currNode.total;
-         if(currNode.left != nullNode) greaterThanHigh -= currNode.left.total;
-         findSumInRangeGreater(high,currNode.left,false,false,true);
-      } else {
-         findSumInRangeGreater(high,currNode.right,true,true,false); 
-      }
-      System.out.println("\ngreaterThanHigh: "+greaterThanHigh);
+   // int greaterThanOrEqualToHigh = 0;
+   // int lowerThanOrEqualToLow = 0;
+   // int count = 0;
+   // public int findSumInRange(int low,int high,RedBlackNode currNode){
+   //    int sum = currNode.total;
+   //    greaterThanOrEqualToHigh = 0;
+   //    lowerThanOrEqualToLow = 0;
+   //    count = 0;
+   //    if(currNode.key >= high){
+   //       greaterThanOrEqualToHigh = currNode.total;
+   //       if(currNode.left != nullNode) greaterThanOrEqualToHigh -= currNode.left.total;
+   //       findSumOfValueGreaterThanHighOnLeftBranch(high,currNode.left,currNode,nullNode);
+   //    } else {
+   //       findSumOfValueGreaterThanHighOnRightBranch(high,currNode.right,currNode,nullNode); 
+   //    }
+   //    System.out.println("\ngreaterThanOrEqualToHigh: "+greaterThanOrEqualToHigh);
       
 
-      if(currNode.key <= low){
-         lowerThanLow = currNode.total;
-         if(currNode.right != nullNode) lowerThanLow -= currNode.right.total;
-         findSumInRangeLower(low,currNode.right,true);
-      } else {
-         findSumInRangeLower(low,currNode.left,false);
-      }
+   //    if(currNode.key <= low){
+   //       lowerThanOrEqualToLow = currNode.total;
+   //       if(currNode.right != nullNode) lowerThanOrEqualToLow -= currNode.right.total;
+   //       findSumInRangeLower(low,currNode.right,true);
+   //    } else {
+   //       findSumInRangeLower(low,currNode.left,false);
+   //    }
       
-      System.out.println("\nlowerThanLow: "+lowerThanLow);
+   //    System.out.println("\nlowerThanOrEqualToLow: "+lowerThanOrEqualToLow);
 
 
-      return sum - greaterThanHigh - lowerThanLow;
-   }
-   public void findSumInRangeGreater(int high,RedBlackNode currNode,boolean fromLeft,boolean previousFromLeft,boolean startFromLeft){
-    count++;
-      if(currNode != nullNode){
-        System.out.println("\nhigher currNode.key: "+currNode.key);
-        if(currNode.key < high){
-          if((!fromLeft && previousFromLeft && startFromLeft)||(fromLeft && !previousFromLeft && !startFromLeft)) {
-            System.out.println(greaterThanHigh+" -= "+currNode.key);
-            greaterThanHigh -= currNode.key;
-          }
+   //    return sum - greaterThanOrEqualToHigh - lowerThanOrEqualToLow;
+   // }
+   // /*for this method, currNode starts on left branch, 
+   // i need to go there and add all the values that are greather than high back to greaterThanOrEqualToHigh*/
+   // public void findSumOfValueGreaterThanHighOnLeftBranch(int high, RedBlackNode currNode,boolean fromLeft,RedBlackNode pivotNode){
+   //    count++;
+   //    if(currNode != nullNode){
+   //        if(currNode.key >= high){
+   //            if(pivotNode == nullNode){
+
+   //            }else{
+
+   //            }
+   //            greaterThanOrEqualToHigh += currNode.total;
+   //            findSumOfValueGreaterThanHighOnLeftBranch(high,currNode.left,fromLeft);
+              
+
+   //        } else {
+   //            if(fromLeft) greaterThanOrEqualToHigh -= currNode.total;
+   //            findSumOfValueGreaterThanHighOnLeftBranch(high,currNode.right,true);
+   //        }
           
-          findSumInRangeGreater(high,currNode.right,true,fromLeft,startFromLeft);
-        }else {
-          if((fromLeft && !previousFromLeft)||fromLeft){
-            System.out.println(greaterThanHigh+" += "+currNode.total);
-             greaterThanHigh += currNode.total;
-          }
-          findSumInRangeGreater(high,currNode.left,false,fromLeft,startFromLeft);
-        }
+   //    }
+   // }
+
+   // /*for this method, currNode starts on right branch, 
+   // i need to go there and subtract all the values that are smaller than high to greaterThanOrEqualToHigh*/
+   // public void findSumOfValueGreaterThanHighOnRightBranch(int high, RedBlackNode currNode){
+   //    count++;
+   //    if(currNode != nullNode){
+        
+   //    }
+   // }
+
+
+   // public void findSumInRangeGreater(int high,RedBlackNode currNode,boolean fromLeft,boolean previousFromLeft,boolean startFromLeft){
+   //  count++;
+   //    if(currNode != nullNode){
+   //      System.out.println("\nhigher currNode.key: "+currNode.key);
+   //      if(currNode.key < high){
+   //        if((!fromLeft && previousFromLeft && startFromLeft)||(fromLeft && !previousFromLeft && !startFromLeft)) {
+   //          System.out.println(greaterThanOrEqualToHigh+" -= "+currNode.key);
+   //          greaterThanOrEqualToHigh -= currNode.key;
+   //        }
+          
+   //        findSumInRangeGreater(high,currNode.right,true,fromLeft,startFromLeft);
+   //      }else {
+   //        if((fromLeft && !previousFromLeft)||fromLeft){
+   //          System.out.println(greaterThanOrEqualToHigh+" += "+currNode.total);
+   //           greaterThanOrEqualToHigh += currNode.total;
+   //        }
+   //        findSumInRangeGreater(high,currNode.left,false,fromLeft,startFromLeft);
+   //      }
+   //    }
+   // }
+   // public void findSumInRangeLower(int low,RedBlackNode currNode,boolean fromLeft){
+   //  count++;
+   //    if(currNode != nullNode){
+   //      System.out.println("\nlower currNode.key: "+currNode.key);
+   //      if(currNode.key <= low) {
+   //        if(!fromLeft) lowerThanOrEqualToLow += currNode.total;
+   //        findSumInRangeLower(low,currNode.right,true);
+   //      } else {
+   //        if(fromLeft) lowerThanOrEqualToLow -= currNode.key;
+   //        findSumInRangeLower(low,currNode.left,false);
+   //      }
+        
+        
+        
+   //    }
+   // }     
+   // 
+   // 
+   int higherSum = 0;
+   int lowerSum = 0;
+   public int findSumInRange(int low, int high,RedBlackNode treeNode){
+      higherSum = 0;
+      getlarge(high,treeNode);
+      lowerSum = 0;
+      getlower(low,treeNode);
+      return treeNode.total - higherSum - lowerSum;
+   } 
+   public void getlarge(int high,RedBlackNode treeNode){
+    if(treeNode != nullNode){
+      if(treeNode.key >= high){
+        higherSum += treeNode.key;
+        if(treeNode.right != nullNode) higherSum += treeNode.right.total;
+        getlarge(high,treeNode.left);
+      }    
+      else getlarge(high,treeNode.right);
+    }
+  }
+  public void getlower(int low,RedBlackNode treeNode){
+    if(treeNode != nullNode){
+      if(treeNode.key <= low) {
+        lowerSum += treeNode.key;
+        if(treeNode.left != nullNode) lowerSum += treeNode.left.total;
+        getlower(low,treeNode.right);
       }
-   }
-   public void findSumInRangeLower(int low,RedBlackNode currNode,boolean fromLeft){
-    count++;
-      if(currNode != nullNode){
-        System.out.println("\nlower currNode.key: "+currNode.key);
-        if(currNode.key <= low) {
-          if(!fromLeft) lowerThanLow += currNode.total;
-          findSumInRangeLower(low,currNode.right,true);
-        } else {
-          if(fromLeft) lowerThanLow -= currNode.key;
-          findSumInRangeLower(low,currNode.left,false);
-        }
-        
-        
-        
-      }
-   }      
+      else getlower(low,treeNode.left);
+    }
+  }  
 }
 
 /* Class RedBlackTreeTest */
@@ -403,27 +467,27 @@ public class RedBlackTreeTest
     int low = 2;
     int high = 8;
     int sum = rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
+    System.out.print("\nSum for low "+low+" high "+high+", "+sum);
 
     low = 7;
     high = 10;
     sum = rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
+    System.out.print("\nSum for low "+low+" high "+high+", "+sum);
 
     low = 8;
     high = 18;
     sum = rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
+    System.out.print("\nSum for low "+low+" high "+high+", "+sum);
 
     low = 5;
     high = 22;
     sum = rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
+    System.out.print("\nSum for low "+low+" high "+high+", "+sum);
 
     low = 1;
     high = 25;
     sum = rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
+    System.out.print("\nSum for low "+low+" high "+high+", "+sum);
 
 
     System.out.print("\nPost order : ");
