@@ -8,21 +8,21 @@ import java.util.Scanner;
 class RedBlackNode
 {    
    RedBlackNode left, right;
-   int element;
+   int key;
    int color;
    int total;
 
    /* Constructor */
-   public RedBlackNode(int theElement)
+   public RedBlackNode(int theKey)
    {
-       this( theElement, null, null );
+       this( theKey, null, null );
    } 
    /* Constructor */
-   public RedBlackNode(int theElement, RedBlackNode lt, RedBlackNode rt)
+   public RedBlackNode(int theKey, RedBlackNode lt, RedBlackNode rt)
    {
        left = lt;
        right = rt;
-       element = theElement;
+       key = theKey;
        color = 1;
        total = 0;
    }    
@@ -69,13 +69,13 @@ class RBTree
    public void insert(int item )
    {
        current = parent = grand = header;
-       nullNode.element = item;
-       while (current.element != item)
+       nullNode.key = item;
+       while (current.key != item)
        {            
            great = grand; 
            grand = parent; 
            parent = current;
-           current = item < current.element ? current.left : current.right;
+           current = item < current.key ? current.left : current.right;
              // Check if two red children and fix if so            
            if (current.left.color == RED && current.right.color == RED)
                handleReorient( item );
@@ -85,7 +85,7 @@ class RBTree
            return;
        current = new RedBlackNode(item, nullNode, nullNode);
          // Attach to parent
-       if (item < parent.element)
+       if (item < parent.key)
            parent.left = current;
        else
            parent.right = current;        
@@ -102,7 +102,7 @@ class RBTree
        {
              // Have to rotate
            grand.color = RED;
-           if (item < grand.element != item < parent.element)
+           if (item < grand.key != item < parent.key)
                  parent = rotate( item, grand );  // Start dbl rotate
              current = rotate(item, great );
              current.color = BLACK;
@@ -112,10 +112,10 @@ class RBTree
      }      
      private RedBlackNode rotate(int item, RedBlackNode parent)
      {
-       if(item < parent.element)
-           return parent.left = item < parent.left.element ? rotateWithLeftChild(parent.left) : rotateWithRightChild(parent.left) ;  
+       if(item < parent.key)
+           return parent.left = item < parent.left.key ? rotateWithLeftChild(parent.left) : rotateWithRightChild(parent.left) ;  
        else
-           return parent.right = item < parent.right.element ? rotateWithLeftChild(parent.right) : rotateWithRightChild(parent.right);  
+           return parent.right = item < parent.right.key ? rotateWithLeftChild(parent.right) : rotateWithRightChild(parent.right);  
    }
    /* Rotate binary tree node with left child */
    private RedBlackNode rotateWithLeftChild(RedBlackNode k2)
@@ -150,7 +150,7 @@ class RBTree
            return l;
        }
    }
-   /* Functions to search for an element */
+   /* Functions to search for an key */
    public boolean search(int val)
    {
        return search(header.right, val);
@@ -160,7 +160,7 @@ class RBTree
        boolean found = false;
        while ((r != nullNode) && !found)
        {
-           int rval = r.element;
+           int rval = r.key;
            if (val < rval)
                r = r.left;
            else if (val > rval)
@@ -187,7 +187,7 @@ class RBTree
            char c = 'B';
            if (r.color == 0)
                c = 'R';
-           System.out.print(r.element +""+c+" "+r.total+" ");
+           System.out.print(r.key +""+c+" "+r.total+" ");
            inorder(r.right);
        }
    }
@@ -203,7 +203,7 @@ class RBTree
            char c = 'B';
            if (r.color == 0)
                c = 'R';
-           System.out.print(r.element +""+c+" "+r.total+" ");
+           System.out.print(r.key +""+c+" "+r.total+" ");
            preorder(r.left);             
            preorder(r.right);
        }
@@ -222,7 +222,7 @@ class RBTree
            char c = 'B';
            if (r.color == 0)
                c = 'R';
-           System.out.print(r.element +""+c+" "+r.total+" ");
+           System.out.print(r.key +""+c+" "+r.total+" ");
        }
    }
 
@@ -234,43 +234,85 @@ class RBTree
    		if (r != nullNode)
        {
            if(r.left == nullNode && r.right == nullNode){
-           		r.total = 0;
+           		r.total = r.key;
            } else {
            		addPostOrderToTheTree(r.left);             
            		addPostOrderToTheTree(r.right);
-           		if(r.left != nullNode) r.total += (r.left.total+r.left.element);
-           		if(r.right != nullNode) r.total += (r.right.total+r.right.element);
+           		if(r.left != nullNode) r.total += (r.left.total);
+           		if(r.right != nullNode) r.total += (r.right.total);
+              r.total += r.key;
            }
            
        }
    }
 
    
-   RedBlackNode midNode = nullNode;
-   int sum = 0;
+   int greaterThanHigh = 0;
+   int lowerThanLow = 0;
    int count = 0;
-   public void findSumInRange(int low,int high,RedBlackNode currNode){
-      count ++;
-   		if(currNode != nullNode){
-   			if(currNode.element >= low && currNode.element <= high){
-   				if(midNode == nullNode){
-   					midNode = currNode;
-   					sum = currNode.total + currNode.element;
-   				}
-          //System.out.println("\n"+currNode.element);
+   public int findSumInRange(int low,int high,RedBlackNode currNode){
+      int sum = currNode.total;
+      greaterThanHigh = 0;
+      lowerThanLow = 0;
+      count = 0;
+      if(currNode.key >= high){
+         greaterThanHigh = currNode.total;
+         if(currNode.left != nullNode) greaterThanHigh -= currNode.left.total;
+         findSumInRangeGreater(high,currNode.left,false,false,true);
+      } else {
+         findSumInRangeGreater(high,currNode.right,true,true,false); 
+      }
+      System.out.println("\ngreaterThanHigh: "+greaterThanHigh);
+      
+
+      if(currNode.key <= low){
+         lowerThanLow = currNode.total;
+         if(currNode.right != nullNode) lowerThanLow -= currNode.right.total;
+         findSumInRangeLower(low,currNode.right,true);
+      } else {
+         findSumInRangeLower(low,currNode.left,false);
+      }
+      
+      System.out.println("\nlowerThanLow: "+lowerThanLow);
+
+
+      return sum - greaterThanHigh - lowerThanLow;
+   }
+   public void findSumInRangeGreater(int high,RedBlackNode currNode,boolean fromLeft,boolean previousFromLeft,boolean startFromLeft){
+    count++;
+      if(currNode != nullNode){
+        System.out.println("\nhigher currNode.key: "+currNode.key);
+        if(currNode.key < high){
+          if((!fromLeft && previousFromLeft && startFromLeft)||(fromLeft && !previousFromLeft && !startFromLeft)) {
+            System.out.println(greaterThanHigh+" -= "+currNode.key);
+            greaterThanHigh -= currNode.key;
+          }
           
-   				findSumInRange(low,high,currNode.left);
-   				findSumInRange(low,high,currNode.right);
-   			}else if(currNode.element < low){
-   				if(midNode != nullNode){
-   					sum -= (currNode.total + currNode.element);
-   				}
-   			}else if(currNode.element > high){
-   				if(midNode != nullNode){
-   					sum -= (currNode.total + currNode.element);
-   				}
-   			}
-   		}
+          findSumInRangeGreater(high,currNode.right,true,fromLeft,startFromLeft);
+        }else {
+          if((fromLeft && !previousFromLeft)||fromLeft){
+            System.out.println(greaterThanHigh+" += "+currNode.total);
+             greaterThanHigh += currNode.total;
+          }
+          findSumInRangeGreater(high,currNode.left,false,fromLeft,startFromLeft);
+        }
+      }
+   }
+   public void findSumInRangeLower(int low,RedBlackNode currNode,boolean fromLeft){
+    count++;
+      if(currNode != nullNode){
+        System.out.println("\nlower currNode.key: "+currNode.key);
+        if(currNode.key <= low) {
+          if(!fromLeft) lowerThanLow += currNode.total;
+          findSumInRangeLower(low,currNode.right,true);
+        } else {
+          if(fromLeft) lowerThanLow -= currNode.key;
+          findSumInRangeLower(low,currNode.left,false);
+        }
+        
+        
+        
+      }
    }      
 }
 
@@ -298,11 +340,11 @@ public class RedBlackTreeTest
         //     switch (choice)
         //     {
         //     case 1 : 
-        //         System.out.println("Enter integer element to insert");
+        //         System.out.println("Enter integer key to insert");
         //         rbt.insert( scan.nextInt() );                     
         //         break;                          
         //     case 2 : 
-        //         System.out.println("Enter integer element to search");
+        //         System.out.println("Enter integer " to search");
         //         System.out.println("Search result : "+ rbt.search( scan.nextInt() ));
         //         break;                                          
         //     case 3 : 
@@ -342,54 +384,46 @@ public class RedBlackTreeTest
     rbt.insert(3);
     rbt.insert(18);
     rbt.insert(10);
-    rbt.insert(8);
+    rbt.insert(9);
     rbt.insert(11);
     rbt.insert(22);
     rbt.insert(26);
+    rbt.insert(8);
+    rbt.insert(12);
+    rbt.insert(24);
+    rbt.insert(4);
+    rbt.insert(5);
+    rbt.insert(13);
+    rbt.insert(20);
     // for(int i = 30 ; i < 50 ; i++){
     //   rbt.insert(i);
     // }
     
     rbt.addPostOrderToTheTree();
-    int low = 1;
-    int high = 10;
-    rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
-    rbt.midNode = rbt.nullNode;
-    rbt.sum = 0;
-    rbt.count = 0;
+    int low = 2;
+    int high = 8;
+    int sum = rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
 
     low = 7;
-    high = 20;
-    rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
-    rbt.midNode = rbt.nullNode;
-    rbt.sum = 0;
-    rbt.count = 0;
+    high = 10;
+    sum = rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
+
+    low = 8;
+    high = 18;
+    sum = rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
 
     low = 5;
     high = 22;
-    rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
-    rbt.midNode = rbt.nullNode;
-    rbt.sum = 0;
-    rbt.count = 0;
+    sum = rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
 
     low = 1;
     high = 25;
-    rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
-    rbt.midNode = rbt.nullNode;
-    rbt.sum = 0;
-    rbt.count = 0;
-
-    low = 1;
-    high = 100;
-    rbt.findSumInRange(low,high,rbt.header.right);
-    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+": "+rbt.sum);
-    rbt.midNode = rbt.nullNode;
-    rbt.sum = 0;
-    rbt.count = 0;
+    sum = rbt.findSumInRange(low,high,rbt.header.right);
+    System.out.print("\nSum for low "+low+" high "+high+" ,count: "+rbt.count+", "+sum);
 
 
     System.out.print("\nPost order : ");
